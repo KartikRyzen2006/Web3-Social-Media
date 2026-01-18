@@ -1,0 +1,7 @@
+node_modules
+.next
+.env.local
+web3/.env
+web3/artifacts
+web3/cache
+.DS_Store

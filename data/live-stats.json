@@ -1,0 +1,12 @@
+{
+  "views": 1,
+  "likes": 0,
+  "likedUsers": [],
+  "chatMessages": [],
+  "currentStream": {
+    "url": "https://youtu.be/VJxppgsHjF8?si=lKHCkoJlTAgFLocH",
+    "isLive": true,
+    "title": "Live Stream",
+    "streamerAddress": "0x3f44308C3deaf27a0e4F29a6a27f2A6c5a2eDDA9"
+  }
+}

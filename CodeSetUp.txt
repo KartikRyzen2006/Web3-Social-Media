@@ -1,0 +1,102 @@
+## FINAL SOURCE CODE SETUP
+
+- Kindly follow the following instruction to setup the final source code, down below, there is Setup video you must watch till the end to understand what you have got and how to run the project
+
+# Setup Vudeo Link
+
+- URL: https://youtu.be/2MZZ4MDlKh8?si=s037n78lvBXAYVvs
+
+📌 Timestamps
+00:00:00 ➤ Introduction
+00:00:51 ➤ Overview
+00:10:46 ➤ Features Demo
+00:21:08 ➤ Mobile Support
+00:27:13 ➤ Starter File
+00:27:59 ➤ Final Source Code
+00:40:07 ➤ Environment Variables
+00:40:07 ➤ Installation
+00:53:50 ➤ Testing Live
+
+
+### CHECK ADVANCE SOCIAL MEDIA DAPP
+
+```
+  PROJECT: ADVANCE SOCIAL MEDIA DAPP
+  Code: https://www.theblockchaincoders.com/sourceCode/build-social-media-website-using-html-css-javascript
+  VIDEO: https://youtu.be/U2tFXrwHDQ0?si=nlo7CpbbFidFzce4
+```
+
+
+####  Hostinger Deployment Online
+
+```
+  WATCH: Hostinger
+  Get : Discount 75%
+  URL: https://www.hostg.xyz/aff_c?offer_id=6&aff_id=139422
+```
+
+### CHECK ADVANCE MULTI-CURRENCY ICO DAPP
+
+```
+  PROJECT: MULTI-CURRENCY ICO DAPP
+  Code: https://www.theblockchaincoders.com/sourceCode/multi-currency-ico-dapp-using-next.js-solidity-and-wagmi
+  VIDEO: https://youtu.be/j8NO8ea5zVo?si=jCmvfXmpmefwjhO5
+```
+
+
+## Support EmailID
+
+- EmailID: theblockchaincoders@gmail.com
+
+- If you have any question related to the project, kindly connect to this emailID: (theblockchaincoders@gmail.com) for any help, In the email kindly provide the follow details about the project and your purchased emailID Likes
+
+1. EmailID: Which you have used when you bought the code
+2. Share Project URL: 
+3. Screenshot / Screen recording of error : Error which you are facing
+
+
+
+
+#### SOLANA PROJECTS DAPP
+
+```
+  TITLE: ADVANCE SOLANA ICO DAPP
+  URL: https://www.theblockchaincoders.com/sourceCode/build-and-deploy-advanced-solana-ico-presale-dapp
+  Video: https://youtu.be/a6MU06oD2kY?si=ZORDd8gud3Oq704C
+```
+
+```
+  TITLE:  SOLANA NFT MARKETPLACE
+  URL: https://www.theblockchaincoders.com/sourceCode/build-and-deploy-a-full-stack-solana-blockchain-nft-marketplace-dapp
+  Video: https://youtu.be/WAqhwpafEGw?si=KJJYpbdPduO95nJ0
+```
+
+```
+  TITLE:  SOLANA STAKING DAPP
+  URL: https://www.theblockchaincoders.com/sourceCode/build-and-deploy-a-solana-staking-dapp-or-rust-anchor-+-next.js-+-web3.js-or-solana-token-staking
+  Video: https://youtu.be/UgtwjfCc83I?si=OTQwDdg2PzCQZ3IM
+```
+
+```
+  TITLE: ADVANCE SOLANA NFT CREATOR
+  URL: https://www.theblockchaincoders.com/sourceCode/build-and-deploy-advanced-solana-nft-creator-dapp-or-mint-update-transfer-nfts-w-next.js-and-metaplex
+  Video: https://youtu.be/qA-VonI0Otw?si=74eQE7uJrqvxU5tB
+```
+
+```
+  TITLE: SOLANA DEFI TOKEN MANAGEMENT AND CREATOR
+  URL: https://www.theblockchaincoders.com/sourceCode/build-and-deploy-a-solana-full-stack-saas-dapp-with-next.js-web3.js-and-solana-token-solana-dapp
+  Video: https://youtu.be/kS5l-a2rQPQ?si=t8C-KjGPJGTnVwS-
+```
+
+```
+  TITLE: ADVANCE SOLANA TOKEN SWAP
+  URL: https://www.theblockchaincoders.com/sourceCode/build-and-deploy-advance-solana-token-swap-dapp-using-next.js-and-tailwind-css-on-solana-mainnet
+  Video: https://youtu.be/n9tiBu08Cl8?si=qVtGPoalXTKlQsH3
+```
+
+```
+  TITLE: SOLANA TOKEN SWAP
+  URL: https://www.theblockchaincoders.com/sourceCode/create-a-solana-token-swap-dapp-with-next.js-or-like-jupiter-raydium-orca-and-lifinity
+  Video: https://youtu.be/GGZFkBYLxAM?si=spHdIROM3L4UHJnB
+```
