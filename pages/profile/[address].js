@@ -28,6 +28,7 @@ import { FaShield } from "react-icons/fa6";
 import { useTheme } from "../../contexts/ThemeContext";
 import { contractService } from "../../lib/contract";
 import { useUserProfile } from "../../contexts/UserProfileContext";
+import { useNotifications } from "../../contexts/NotificationContext";
 import PostCard from "../../components/Posts/PostCard";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
 import toast from "react-hot-toast";
@@ -56,6 +57,7 @@ export default function ProfilePage() {
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const { userProfile: currentUserProfile } = useUserProfile();
+  const { addFollowNotification } = useNotifications();
 
   const [profile, setProfile] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
@@ -94,7 +96,43 @@ export default function ProfilePage() {
           publicClient,
           profileAddress
         );
-        setUserPosts(posts);
+
+        // Fetch activity (likes/comments) for this profile
+        const activityKey = `activity_${profileAddress.toLowerCase()}`;
+        const activity = JSON.parse(localStorage.getItem(activityKey) || "[]");
+
+        if (activity.length > 0) {
+          // Fetch all posts to find the interacted ones
+          // Note: In a production app, we would fetch posts by ID. 
+          // Here we fetch a large batch and filter.
+          const { posts: allPosts } = await contractService.getAllPosts(publicClient, 0, 200);
+
+          const interactedPosts = activity.map(act => {
+            const post = allPosts.find(p => p.postID === act.postId);
+            if (post) {
+              return {
+                ...post,
+                interaction: {
+                  type: act.type,
+                  address: profileAddress,
+                  username: profileData.name
+                },
+                activityTimestamp: act.timestamp
+              };
+            }
+            return null;
+          }).filter(Boolean);
+
+          // Merge and sort
+          const mergedPosts = [
+            ...posts.map(p => ({ ...p, activityTimestamp: p.timeCreated * 1000 })),
+            ...interactedPosts.filter(ip => !posts.find(p => p.postID === ip.postID))
+          ].sort((a, b) => b.activityTimestamp - a.activityTimestamp);
+
+          setUserPosts(mergedPosts);
+        } else {
+          setUserPosts(posts);
+        }
 
         const [followersList, followingList] = await Promise.all([
           contractService.getUserFollowers(publicClient, profileAddress),
@@ -143,6 +181,12 @@ export default function ProfilePage() {
 
       if (result.success) {
         setIsFollowing(!isFollowing);
+
+        if (!isFollowing && currentUserProfile?.name) {
+          const isFollowBack = await contractService.checkIsFollowing(publicClient, profileAddress, currentUserAddress);
+          addFollowNotification(profileAddress, currentUserAddress, currentUserProfile.name, isFollowBack);
+        }
+
         setProfile((prev) => ({
           ...prev,
           followerCount: isFollowing
@@ -215,7 +259,38 @@ export default function ProfilePage() {
           publicClient,
           profileAddress
         );
-        setUserPosts(posts);
+
+        // Fetch activity for refresh
+        const activityKey = `activity_${profileAddress.toLowerCase()}`;
+        const activity = JSON.parse(localStorage.getItem(activityKey) || "[]");
+
+        if (activity.length > 0) {
+          const { posts: allPosts } = await contractService.getAllPosts(publicClient, 0, 200);
+          const interactedPosts = activity.map(act => {
+            const post = allPosts.find(p => p.postID === act.postId);
+            if (post) {
+              return {
+                ...post,
+                interaction: {
+                  type: act.type,
+                  address: profileAddress,
+                  username: profile?.name || "User"
+                },
+                activityTimestamp: act.timestamp
+              };
+            }
+            return null;
+          }).filter(Boolean);
+
+          const mergedPosts = [
+            ...posts.map(p => ({ ...p, activityTimestamp: p.timeCreated * 1000 })),
+            ...interactedPosts.filter(ip => !posts.find(p => p.postID === ip.postID))
+          ].sort((a, b) => b.activityTimestamp - a.activityTimestamp);
+
+          setUserPosts(mergedPosts);
+        } else {
+          setUserPosts(posts);
+        }
 
         const profileData = await contractService.getProfile(
           publicClient,
@@ -481,6 +556,7 @@ export default function ProfilePage() {
                       post={post}
                       currentUser={currentUserAddress}
                       onPostUpdate={refreshPosts}
+                      interaction={post.interaction}
                     />
                   ))
                 ) : (

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { usePublicClient, useWalletClient, useAccount } from "wagmi";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useNotifications } from "../../contexts/NotificationContext";
+import { useUserProfile } from "../../contexts/UserProfileContext";
 
 const formatTimeAgo = (timestamp) => {
   const now = new Date();
@@ -41,11 +43,13 @@ import { POST_TYPES } from "../../lib/constants";
 import toast from "react-hot-toast";
 import Link from "next/link";
 
-const PostCard = ({ post, currentUser, onPostUpdate }) => {
+const PostCard = ({ post, currentUser, onPostUpdate, interaction }) => {
   const { theme } = useTheme();
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const { address } = useAccount();
+  const { addLikeNotification, addCommentNotification } = useNotifications();
+  const { userProfile: currentProfile } = useUserProfile();
 
   if (!post || !post.author || post.postID === undefined || post.postID === null) {
     return null;
@@ -157,6 +161,32 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
       if (result.success) {
         setIsLiked(!isLiked);
         setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+
+        // Log activity for the profile feed
+        if (!isLiked && address) {
+          const activityKey = `activity_${address.toLowerCase()}`;
+          const existingActivity = JSON.parse(localStorage.getItem(activityKey) || "[]");
+
+          // Avoid duplicate activity for the same post
+          if (!existingActivity.find(a => a.postId === post.postID && a.type === 'like')) {
+            existingActivity.unshift({
+              type: 'like',
+              postId: post.postID,
+              timestamp: Date.now()
+            });
+            localStorage.setItem(activityKey, JSON.stringify(existingActivity.slice(0, 50))); // Keep last 50
+          }
+        }
+
+        // Trigger notification if liking
+        if (!isLiked) {
+          addLikeNotification(
+            post.author,
+            address,
+            currentProfile?.name || "Someone",
+            post.postID
+          );
+        }
       }
     } catch (error) {
       console.error("Error toggling like:", error);
@@ -215,6 +245,31 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
             })
           );
           setCommentProfiles(newProfiles);
+        }
+
+        // Log activity for the profile feed
+        if (address) {
+          const activityKey = `activity_${address.toLowerCase()}`;
+          const existingActivity = JSON.parse(localStorage.getItem(activityKey) || "[]");
+
+          existingActivity.unshift({
+            type: 'comment',
+            postId: post.postID,
+            commentText: newComment.trim(),
+            timestamp: Date.now()
+          });
+          localStorage.setItem(activityKey, JSON.stringify(existingActivity.slice(0, 50)));
+        }
+
+        // Trigger notification
+        if (address) {
+          addCommentNotification(
+            post.author,
+            address,
+            currentProfile?.name || "Someone",
+            post.postID,
+            newComment.trim()
+          );
         }
       }
     } catch (error) {
@@ -298,6 +353,25 @@ const PostCard = ({ post, currentUser, onPostUpdate }) => {
 
   return (
     <div className="glass-panel overflow-hidden transition-all duration-500 hover:shadow-2xl group/card">
+      {/* Twitter-style interaction banner */}
+      {interaction && (
+        <div className={`px-6 py-2 border-b flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'bg-white/5 border-purple-500/10 text-white/40' : 'bg-gray-50 border-gray-100 text-gray-400'}`}>
+          {interaction.type === 'like' ? (
+            <FaHeart className="h-3 w-3 text-cyan-400" />
+          ) : (
+            <FaComment className="h-3 w-3 text-purple-400" />
+          )}
+          <span>
+            <Link href={`/profile/${interaction.address}`}>
+              <span className={`hover:underline cursor-pointer ${theme === 'dark' ? 'text-cyan-400' : 'text-purple-600'}`}>
+                {interaction.username || "Someone"}
+              </span>
+            </Link>
+            {interaction.type === 'like' ? " liked this signal" : " commented on this signal"}
+          </span>
+        </div>
+      )}
+
       {/* Post Header */}
       <div className="p-6 pb-2">
         <div className="flex items-center justify-between">

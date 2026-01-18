@@ -321,9 +321,11 @@ contract SocialMediaDapp is ReentrancyGuard, Ownable, Pausable { // Contract dec
         _removeFromArray(userFollowers[userToUnfollow], msg.sender); // slice out of follower list
         _removeFromArray(userFollowing[msg.sender], userToUnfollow); // slice out of following list
 
-        unchecked { // optimized underflow check
-            --profiles[userToUnfollow].followerCount; // decrement target count
-            --profiles[msg.sender].followingCount; // decrement sender count
+        if (profiles[userToUnfollow].followerCount > 0) {
+            profiles[userToUnfollow].followerCount--;
+        }
+        if (profiles[msg.sender].followingCount > 0) {
+            profiles[msg.sender].followingCount--;
         }
 
         emit UserUnfollowed(msg.sender, userToUnfollow); // announce disconnection
@@ -454,8 +456,8 @@ contract SocialMediaDapp is ReentrancyGuard, Ownable, Pausable { // Contract dec
         require(hasLikedPost[postId][msg.sender], "Not liked"); // Must have liked first
 
         hasLikedPost[postId][msg.sender] = false; // Remove like status
-        unchecked { // optimized decrement
-            --allPostsById[postId].likes; // decrease global count
+        if (allPostsById[postId].likes > 0) {
+            allPostsById[postId].likes--;
         }
 
         // Update in user's posts array // Sync data across copies
@@ -547,8 +549,8 @@ contract SocialMediaDapp is ReentrancyGuard, Ownable, Pausable { // Contract dec
         // Update in user's posts array
         _updatePostInUserArray(allPostsById[postId].author, postId);
         
-        unchecked {
-            --profiles[msg.sender].postCount; // Decrement user profile post count
+        if (profiles[msg.sender].postCount > 0) {
+            profiles[msg.sender].postCount--;
         }
 
         emit PostDeleted(msg.sender, postId); // Announce deletion

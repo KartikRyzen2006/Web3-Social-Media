@@ -295,16 +295,34 @@ const Header = ({ sidebarOpen, setSidebarOpen, userProfile, isConnected }) => {
                         {notifications.length > 0 ? (
                           <div className={`divide-y ${theme === 'dark' ? 'divide-white/5' : 'divide-gray-100'}`}>
                             {notifications.map((n) => (
-                              <div key={n.id} className={`px-6 py-4 hover:bg-white/5 transition-colors ${!n.read ? 'bg-blue-500/5' : ''}`}>
-                                <div className="flex items-start gap-3">
-                                  <div className="h-9 w-9 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center text-white font-bold text-xs">
-                                    {n.fromUsername?.charAt(0)}
-                                  </div>
-                                  <div>
-                                    <p className={`text-sm ${theme === 'dark' ? 'text-white/80' : 'text-gray-700'}`}>
-                                      <span className="font-bold text-blue-400">{n.fromUsername}</span> {n.type === 'follow' ? 'started following you' : 'accepted your request'}
+                              <div key={n.id} className={`px-6 py-4 hover:bg-white/5 transition-all duration-300 ${!n.read ? 'bg-blue-500/5 border-l-2 border-blue-500' : ''}`}>
+                                <div className="flex items-start gap-4">
+                                  <Link href={`/profile/${n.fromAddress}`}>
+                                    <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center text-white font-black text-sm cursor-pointer hover:scale-110 transition-transform shadow-lg">
+                                      {n.fromUsername?.charAt(0)}
+                                    </div>
+                                  </Link>
+                                  <div className="flex-1 min-w-0">
+                                    <p className={`text-sm leading-relaxed ${theme === 'dark' ? 'text-white/90' : 'text-gray-800'}`}>
+                                      <Link href={`/profile/${n.fromAddress}`}>
+                                        <span className="font-black text-blue-400 hover:text-blue-300 cursor-pointer">{n.fromUsername}</span>
+                                      </Link>{" "}
+                                      <span className="font-medium">
+                                        {n.type === 'follow' ? (n.isFollowBack ? 'followed you back' : 'started following you') :
+                                          n.type === 'follow_accept' ? 'accepted your follow request' :
+                                            n.type === 'like' ? 'liked your broadcast' :
+                                              n.type === 'comment' ? n.message.replace(`${n.fromUsername} `, '') :
+                                                'signaled you'}
+                                      </span>
                                     </p>
-                                    <span className={`text-[10px] ${theme === 'dark' ? 'text-white/40' : 'text-gray-500'}`}>{new Date(n.timestamp).toLocaleDateString()}</span>
+                                    <div className="flex items-center gap-2 mt-1">
+                                      <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-white/30' : 'text-gray-400'}`}>
+                                        {new Date(n.timestamp).toLocaleDateString()}
+                                      </span>
+                                      {!n.read && (
+                                        <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>

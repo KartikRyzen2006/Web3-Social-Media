@@ -139,27 +139,9 @@ export default function Users() {
         if (!isCurrentlyFollowing) {
           const followedUser = users.find((u) => u.owner === userAddress);
           if (followedUser && userProfile?.name) {
-            // Store notification in followed user's localStorage
-            const notificationKey = `notifications_${userAddress}`;
-            const existingNotifications = JSON.parse(
-              localStorage.getItem(notificationKey) || "[]"
-            );
-
-            const newNotification = {
-              id: Date.now().toString() + Math.random().toString(36),
-              type: "follow",
-              fromAddress: address,
-              fromUsername: userProfile.name,
-              message: `${userProfile.name} followed you`,
-              timestamp: Date.now(),
-              read: false,
-            };
-
-            existingNotifications.unshift(newNotification);
-            localStorage.setItem(
-              notificationKey,
-              JSON.stringify(existingNotifications)
-            );
+            // Check if they are already following the current user (Follow Back)
+            const isFollowBack = await contractService.checkIsFollowing(publicClient, userAddress, address);
+            addFollowNotification(userAddress, address, userProfile.name, isFollowBack);
           }
         }
       }
